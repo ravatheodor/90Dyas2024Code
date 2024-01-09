@@ -1,0 +1,20 @@
+---
+- hosts: web
+  become: true
+  tasks:
+    - name: ensure nginx is at the latest version
+      apt: name=nginx state=latest update_cache=true
+    - name: start nginx
+      service:
+        name: nginx
+        state: started
+    - name: remove default index file
+      ansible.builtin.file:
+        path: /var/www/html/index.nginx-debian.html
+        state: absent
+    - name: clone web page from GitHub
+      ansible.builtin.git:
+        repo: 'https://github.com/your_repo.git'
+        dest: /var/www/html
+        clone: yes
+        update: yes
